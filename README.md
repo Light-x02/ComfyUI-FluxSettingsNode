@@ -12,9 +12,9 @@ FluxSettingsNode is a combined node for **ComfyUI** that merges the functionalit
 
 ## Features
 - **Combined Guidance**: Control guidance strength with precise adjustments.
-- **Sampler Selection**: Choose your preferred sampler dynamically.
+- **Sampler and Scheduler Selection**: Choose your preferred sampler and Scheduler dynamically.
 - **Flexible Scheduling**: Configure sigmas and denoise levels for advanced workflows.
-- **Noise Management**: Generate random noise or disable it entirely.
+- **Noise Management**: Generate random noise.
 - **Streamlined Workflows**: Reduce complexity by integrating multiple nodes into one.
 
 ## Installation
