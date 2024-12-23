@@ -41,8 +41,8 @@ class FluxSettingsNode(ComfyNodeABC, DisableNoise):
     def INPUT_TYPES(s):
         return {
             "required": {
-                "model": ("MODEL",),
-                "conditioning": ("CONDITIONING",),
+                "model": ("MODEL", {"pos": (0, 50)}),  # Adjusted position for model
+                "conditioning": ("CONDITIONING", {"pos": (200, 50)}),  # Adjusted position for conditioning
                 "guidance": ("FLOAT", {"default": 3.5, "min": 0.0, "max": 100.0, "step": 0.1}),
                 "sampler_name": (comfy.samplers.SAMPLER_NAMES, ),
                 "scheduler": (comfy.samplers.SCHEDULER_NAMES, ),
@@ -90,11 +90,12 @@ class FluxSettingsNode(ComfyNodeABC, DisableNoise):
         sampler, = self.get_sampler(sampler_name)
         sigmas, = self.get_sigmas(model, scheduler, steps, denoise)
         noise, = self.get_noise(noise_seed)
+
         return (c, sampler, sigmas, noise)
 
 NODE_CLASS_MAPPINGS = {
     "FluxSettingsNode": FluxSettingsNode,
-    "DisableNoise": DisableNoise,
+    "DisableNoise": DisableNoise
 }
 
 NODE_DISPLAY_NAME_MAPPINGS = {
