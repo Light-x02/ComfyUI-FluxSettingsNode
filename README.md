@@ -63,7 +63,7 @@ FluxSettingsNode is fully compatible with the extension [ComfyUI-ImageMetadataEx
 - **Description**: Configures sigma and denoise settings for advanced workflows.
 
 #### Noise Management
-- **Description**: Generates random noise or disables noise for specific workflows.
+- **Description**: Generates random noise for specific workflows.
 
 ### Example Workflow
 1. Use the FluxSettingsNode to configure guidance, sampler, scheduling, and noise settings.
