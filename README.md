@@ -1,6 +1,6 @@
 # FluxSettingsNode
 
-**Version**: 1.0.0  
+**Version**: 1.1.0  
 **Author**: [Light-x02](https://github.com/Light-x02)
 
 ## Support My Work
