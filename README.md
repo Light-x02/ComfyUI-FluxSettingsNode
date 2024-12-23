@@ -10,6 +10,9 @@ If you find this project useful, you can support my work on Ko-fi:
 ## Description
 FluxSettingsNode is a combined node for **ComfyUI** that merges the functionalities of the native nodes **FluxGuidance**, **KSamplerSelect**, **BasicScheduler**, and **RandomNoise** into one powerful and flexible tool. This node simplifies workflows by consolidating these features while enhancing their compatibility.
 
+## Compatibility
+FluxSettingsNode is fully compatible with the extension [ComfyUI-ImageMetadataExtension](https://github.com/edelvarden/ComfyUI-ImageMetadataExtension). This integration ensures metadata compatibility with **Civitai**, allowing details such as sampler, steps, guidance, prompt, ans seed to be correctly captured and displayed on the Civitai platform.
+
 ## Features
 - **Combined Guidance**: Control guidance strength with precise adjustments.
 - **Sampler and Scheduler Selection**: Choose your preferred sampler and Scheduler dynamically.
