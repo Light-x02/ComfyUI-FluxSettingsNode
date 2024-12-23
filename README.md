@@ -8,10 +8,10 @@ If you find this project useful, you can support my work on Ko-fi:
 [https://ko-fi.com/light_x02](https://ko-fi.com/light_x02)
 
 ## Description
-FluxSettingsNode is a combined node for **ComfyUI** that merges the functionalities of the native nodes **FluxGuidance**, **KSamplerSelect**, **BasicScheduler**, and **RandomNoise** into one powerful and flexible tool. This node simplifies workflows by consolidating these features while enhancing their compatibility.
+FluxSettingsNode is a combined node for **ComfyUI** that merges the functionalities of the native nodes **FluxGuidance**, **KSamplerSelect**, **BasicScheduler**, and **RandomNoise** into one powerful and flexible tool. This node simplifies workflows by consolidating these features while enhancing their compatibility. It includes six tabs for switching between different configurations, saving fields like `guidance`, `sampler_name`, `scheduler`, `steps`, and `denoise` for each tab. This node simplifies workflows by consolidating these features while enhancing their compatibility.
 
 ## Compatibility
-FluxSettingsNode is fully compatible with the extension [ComfyUI-ImageMetadataExtension](https://github.com/edelvarden/ComfyUI-ImageMetadataExtension). This integration ensures metadata compatibility with **Civitai**, allowing details such as sampler, steps, guidance, prompt, ans seed to be correctly captured and displayed on the Civitai platform.
+FluxSettingsNode is fully compatible with the extension [ComfyUI-ImageMetadataExtension](https://github.com/edelvarden/ComfyUI-ImageMetadataExtension). This integration ensures metadata compatibility with **Civitai**, allowing details such as sampler, steps, guidance, prompt, and seed to be correctly captured and displayed on the Civitai platform.
 
 ## Features
 - **Combined Guidance**: Control guidance strength with precise adjustments.
@@ -19,6 +19,8 @@ FluxSettingsNode is fully compatible with the extension [ComfyUI-ImageMetadataEx
 - **Flexible Scheduling**: Configure sigmas and denoise levels for advanced workflows.
 - **Noise Management**: Generate random noise.
 - **Streamlined Workflows**: Reduce complexity by integrating multiple nodes into one.
+- **Six Tabs for Configuration Switching**: Effortlessly switch between up to six different configurations using tabs.
+  - Saved fields per tab: `guidance`, `sampler_name`, `scheduler`, `steps`, and `denoise`.
 
 ## Installation
 
@@ -65,10 +67,20 @@ FluxSettingsNode is fully compatible with the extension [ComfyUI-ImageMetadataEx
 #### Noise Management
 - **Description**: Generates random noise for specific workflows.
 
+#### Tab-Based Configuration Switching
+- **Description**: Utilize six tabs to manage multiple configurations within a single node.
+- **Saved Fields**: Each tab independently saves the following fields:
+  - `guidance`
+  - `sampler_name`
+  - `scheduler`
+  - `steps`
+  - `denoise`
+
 ### Example Workflow
 1. Use the FluxSettingsNode to configure guidance, sampler, scheduling, and noise settings.
-2. Connect it to other nodes in your workflow.
-3. Generate your image with streamlined and enhanced control.
+2. Switch between configurations using tabs to test different setups seamlessly.
+3. Connect it to other nodes in your workflow.
+4. Generate your image with streamlined and enhanced control.
 
 ![Workflow Example](assets/exemple_workflow.png)
 
