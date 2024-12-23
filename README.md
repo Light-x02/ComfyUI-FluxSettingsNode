@@ -72,8 +72,5 @@ FluxSettingsNode is a combined node for **ComfyUI** that merges the functionalit
 ## Additional Notes
 This node is designed to work seamlessly with the ComfyUI ecosystem. Ensure you have the latest version of ComfyUI installed for the best experience.
 
-## License
-This project is licensed under the **MIT License**. You are free to use, modify, and distribute it, provided you include a copyright notice.
-
 ## Contribution
 Contributions are welcome! If you want to report a bug or suggest an improvement, open an issue or submit a pull request on the [GitHub repository](https://github.com/Light-x02/ComfyUI-FluxSettingsNode).
