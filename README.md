@@ -67,6 +67,8 @@ FluxSettingsNode is a combined node for **ComfyUI** that merges the functionalit
 2. Connect it to other nodes in your workflow.
 3. Generate your image with streamlined and enhanced control.
 
+![Workflow Example](assets/exemple_workflow.png)
+
 ## Additional Notes
 This node is designed to work seamlessly with the ComfyUI ecosystem. Ensure you have the latest version of ComfyUI installed for the best experience.
 
