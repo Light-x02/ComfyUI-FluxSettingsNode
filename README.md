@@ -82,7 +82,7 @@ FluxSettingsNode is fully compatible with the extension [ComfyUI-ImageMetadataEx
 3. Connect it to other nodes in your workflow.
 4. Generate your image with streamlined and enhanced control.
 
-![Workflow Example](assets/exemple_workflow.png)
+![Workflow Example]
 
 ## Additional Notes
 This node is designed to work seamlessly with the ComfyUI ecosystem. Ensure you have the latest version of ComfyUI installed for the best experience.
