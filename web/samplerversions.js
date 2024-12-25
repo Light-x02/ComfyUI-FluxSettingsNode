@@ -16,6 +16,37 @@ const TAB_CONFIG = {
     yPosition: -5
 };
 
+const DEFAULT_TAB_CONTENT = {
+    guidance: 3.5,
+    sampler_name: "euler",
+    scheduler: "normal",
+    steps: 20,
+    denoise: 1.0
+};
+
+function saveTabContent(context, tabIndex) {
+    context.tabContents[tabIndex] = {
+        guidance: context.guidanceWidget?.value ?? DEFAULT_TAB_CONTENT.guidance,
+        sampler_name: context.samplerWidget?.value ?? DEFAULT_TAB_CONTENT.sampler_name,
+        scheduler: context.schedulerWidget?.value ?? DEFAULT_TAB_CONTENT.scheduler,
+        steps: context.stepsWidget?.value ?? DEFAULT_TAB_CONTENT.steps,
+        denoise: context.denoiseWidget?.value ?? DEFAULT_TAB_CONTENT.denoise
+    };
+}
+
+function loadTabContent(context, tabIndex) {
+    const content = context.tabContents[tabIndex] || {};
+    context.guidanceWidget.value = content.guidance ?? DEFAULT_TAB_CONTENT.guidance;
+    context.samplerWidget.value = content.sampler_name ?? DEFAULT_TAB_CONTENT.sampler_name;
+    context.schedulerWidget.value = content.scheduler ?? DEFAULT_TAB_CONTENT.scheduler;
+    context.stepsWidget.value = content.steps ?? DEFAULT_TAB_CONTENT.steps;
+    context.denoiseWidget.value = content.denoise ?? DEFAULT_TAB_CONTENT.denoise;
+}
+
+function initializeWidgets(node, widgetNames) {
+    return widgetNames.map((name, index) => node.widgets[index] || { value: null, callback: null });
+}
+
 app.registerExtension({
     name: "FluxSettingsNode",
 
@@ -30,57 +61,31 @@ app.registerExtension({
         const originalOnConfigure = nodeType.prototype.onConfigure;
 
         nodeType.prototype.onNodeCreated = function () {
-            if (originalOnNodeCreated) {
-                originalOnNodeCreated.apply(this, arguments);
-            }
+            if (originalOnNodeCreated) originalOnNodeCreated.apply(this, arguments);
 
-            // Ensure widgets are defined
-            const widgetDefaults = { value: null, callback: null };
-            this.guidanceWidget = this.widgets[0] || widgetDefaults; // guidance corresponds to widget[0]
-            this.samplerWidget = this.widgets[1] || widgetDefaults; // sampler_name corresponds to widget[1]
-            this.schedulerWidget = this.widgets[2] || widgetDefaults; // scheduler corresponds to widget[2]
-            this.stepsWidget = this.widgets[3] || widgetDefaults; // steps corresponds to widget[3]
-            this.denoiseWidget = this.widgets[4] || widgetDefaults; // denoise corresponds to widget[4]
+            // Initialize widgets
+            [this.guidanceWidget, this.samplerWidget, this.schedulerWidget, this.stepsWidget, this.denoiseWidget] = initializeWidgets(this, [
+                "guidance",
+                "sampler_name",
+                "scheduler",
+                "steps",
+                "denoise"
+            ]);
 
             // Initialize tab state and content
             this.activeTab = 0;
-            this.tabContents = TAB_CONFIG.labels.map(() => ({
-                guidance: 3.5,
-                sampler_name: "euler",
-                scheduler: "normal",
-                steps: 20,
-                denoise: 1.0
-            }));
+            this.tabContents = TAB_CONFIG.labels.map(() => ({ ...DEFAULT_TAB_CONTENT }));
 
-            // Add change listeners to widgets
-            this.guidanceWidget.callback = () => {
-                console.log(`Tab ${this.activeTab}: Saving guidance =`, this.guidanceWidget.value);
-                this.tabContents[this.activeTab].guidance = this.guidanceWidget.value;
-            };
-
-            this.samplerWidget.callback = () => {
-                console.log(`Tab ${this.activeTab}: Saving sampler_name =`, this.samplerWidget.value);
-                this.tabContents[this.activeTab].sampler_name = this.samplerWidget.value;
-            };
-
-            this.schedulerWidget.callback = () => {
-                this.tabContents[this.activeTab].scheduler = this.schedulerWidget.value;
-            };
-
-            this.stepsWidget.callback = () => {
-                this.tabContents[this.activeTab].steps = this.stepsWidget.value;
-            };
-
-            this.denoiseWidget.callback = () => {
-                this.tabContents[this.activeTab].denoise = this.denoiseWidget.value;
-            };
+            // Define widget callbacks
+            this.guidanceWidget.callback = () => saveTabContent(this, this.activeTab);
+            this.samplerWidget.callback = () => saveTabContent(this, this.activeTab);
+            this.schedulerWidget.callback = () => saveTabContent(this, this.activeTab);
+            this.stepsWidget.callback = () => saveTabContent(this, this.activeTab);
+            this.denoiseWidget.callback = () => saveTabContent(this, this.activeTab);
         };
 
         nodeType.prototype.onDrawForeground = function (ctx) {
-            if (originalOnDrawForeground) {
-                originalOnDrawForeground.apply(this, arguments);
-            }
-
+            if (originalOnDrawForeground) originalOnDrawForeground.apply(this, arguments);
             if (this.flags.collapsed) return;
 
             ctx.save();
@@ -111,90 +116,48 @@ app.registerExtension({
             const [x, y] = local_pos;
             const { yPosition, height, width, spacing, offset, labels } = TAB_CONFIG;
 
-            // Check if the click is outside the tab area
-            if (y < yPosition || y > yPosition + height) {
-                return false; // Allow other events like zoom or pan
-            }
+            if (y < yPosition || y > yPosition + height) return false;
 
-            for (let i = 0; i < labels.length; i++) {
-                const tabX = offset + (width + spacing) * i;
-                if (x >= tabX && x <= tabX + width) {
-                    if (i === this.activeTab) return false;
+            const clickedTabIndex = Math.floor((x - offset) / (width + spacing));
+            if (
+                clickedTabIndex < 0 ||
+                clickedTabIndex >= labels.length ||
+                clickedTabIndex === this.activeTab
+            )
+                return false;
 
-                    console.log(`Before switching tabs - Tab ${this.activeTab} content:`, this.tabContents[this.activeTab]);
+            console.log(`Before switching tabs - Tab ${this.activeTab} content:`, this.tabContents[this.activeTab]);
 
-                    // Save current widget values to current tab
-                    this.tabContents[this.activeTab] = {
-                        guidance: this.guidanceWidget?.value ?? 3.5,
-                        sampler_name: this.samplerWidget?.value ?? "euler",
-                        scheduler: this.schedulerWidget?.value ?? "normal",
-                        steps: this.stepsWidget?.value ?? 20,
-                        denoise: this.denoiseWidget?.value ?? 1.0
-                    };
+            saveTabContent(this, this.activeTab);
+            this.activeTab = clickedTabIndex;
+            console.log(`Loading values for Tab ${this.activeTab}:`, this.tabContents[this.activeTab]);
+            loadTabContent(this, this.activeTab);
 
-                    console.log(`Saved values for Tab ${this.activeTab}:`, this.tabContents[this.activeTab]);
-
-                    // Switch tab
-                    this.activeTab = i;
-
-                    // Load content from new tab
-                    const newTabContent = this.tabContents[i] || {};
-                    console.log(`Loading values for Tab ${i}:`, newTabContent);
-                    this.guidanceWidget.value = newTabContent.guidance ?? 3.5;
-                    this.samplerWidget.value = newTabContent.sampler_name ?? "euler";
-                    this.schedulerWidget.value = newTabContent.scheduler ?? "normal";
-                    this.stepsWidget.value = newTabContent.steps ?? 20;
-                    this.denoiseWidget.value = newTabContent.denoise ?? 1.0;
-
-                    this.setDirtyCanvas(true);
-                    return true;
-                }
-            }
-
-            return false;
+            this.setDirtyCanvas(true);
+            return true;
         };
 
         nodeType.prototype.getBounding = function () {
             const bounds = originalGetBounding ? originalGetBounding.apply(this, arguments) : [0, 0, 200, 300];
             const tabsHeight = Math.abs(TAB_CONFIG.yPosition) + TAB_CONFIG.height;
-            bounds[1] -= tabsHeight; // Extend top boundary to include tabs
-            bounds[3] += 100; // Drastically increase height to force alignment
+            bounds[1] -= tabsHeight;
+            bounds[3] += 100;
             return bounds;
         };
 
         nodeType.prototype.onSerialize = function (o) {
-            if (originalOnSerialize) {
-                originalOnSerialize.apply(this, arguments);
-            }
+            if (originalOnSerialize) originalOnSerialize.apply(this, arguments);
             o.tabContents = this.tabContents;
             o.activeTab = this.activeTab;
         };
 
         nodeType.prototype.onConfigure = function (o) {
-            if (originalOnConfigure) {
-                originalOnConfigure.apply(this, arguments);
-            }
-            if (o.tabContents && Array.isArray(o.tabContents)) {
-                this.tabContents = TAB_CONFIG.labels.map((_, i) =>
-                    o.tabContents[i] || {
-                        guidance: 3.5,
-                        sampler_name: "euler",
-                        scheduler: "normal",
-                        steps: 20,
-                        denoise: 1.0
-                    }
-                );
-                this.activeTab = o.activeTab >= 0 && o.activeTab < TAB_CONFIG.labels.length ? o.activeTab : 0;
+            if (originalOnConfigure) originalOnConfigure.apply(this, arguments);
 
-                const currentTabContent = this.tabContents[this.activeTab];
-                console.log(`Restoring Tab ${this.activeTab} Content:`, currentTabContent);
-                if (this.guidanceWidget && this.samplerWidget && this.schedulerWidget && this.stepsWidget && this.denoiseWidget) {
-                    this.guidanceWidget.value = currentTabContent.guidance ?? 3.5;
-                    this.samplerWidget.value = currentTabContent.sampler_name ?? "euler";
-                    this.schedulerWidget.value = currentTabContent.scheduler ?? "normal";
-                    this.stepsWidget.value = currentTabContent.steps ?? 20;
-                    this.denoiseWidget.value = currentTabContent.denoise ?? 1.0;
-                }
+            if (o.tabContents && Array.isArray(o.tabContents)) {
+                this.tabContents = TAB_CONFIG.labels.map((_, i) => o.tabContents[i] || { ...DEFAULT_TAB_CONTENT });
+                this.activeTab = Math.min(Math.max(o.activeTab || 0, 0), TAB_CONFIG.labels.length - 1);
+                loadTabContent(this, this.activeTab);
             }
         };
     }
