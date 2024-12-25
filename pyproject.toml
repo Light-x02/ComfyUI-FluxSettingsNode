@@ -1,0 +1,14 @@
+[project]
+name = "comfyui-fluxsettingsnode"
+description = "A combined node for ComfyUI with six configurable tabs for managing multiple parameter configurations, including guidance, sampler, scheduler, steps, and denoise."
+version = "1.0.0"
+license = {file = "LICENSE"}
+
+[project.urls]
+Repository = "https://github.com/Light-x02/ComfyUI-FluxSettingsNode"
+#  Used by Comfy Registry https://comfyregistry.org
+
+[tool.comfy]
+PublisherId = ""
+DisplayName = "ComfyUI-FluxSettingsNode"
+Icon = ""
