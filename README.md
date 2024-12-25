@@ -25,7 +25,6 @@ FluxSettingsNode is fully compatible with the extension [ComfyUI-ImageMetadataEx
 ## Installation
 
 ### Method 1: Install via ComfyUI Manager
-*Coming Soon...*
 
 2. Go to the **Custom Nodes** section in the interface.
 3. Search for **"FluxSettingsNode"** and install it directly from the ComfyUI Manager.
